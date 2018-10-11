@@ -1,0 +1,224 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style type="text/css">
+
+  #up_screen{
+    clear:left;
+    height:25%;
+  }
+  #down_screen{
+    clear:left;
+    height:25%;
+  }
+  .one_third{
+    float:left;
+    width:33%;
+  }
+  </style>
+</head>
+<body>
+  <div>
+    <!--どのデータのグラフか表示する-->
+  <div id="message"></div>
+  </div>
+  <div id="up_screen">
+    <div id="Roll" class="one_third"></div>
+    <div id="Pitch" class="one_third"></div>
+    <div id="Cadence" class="one_third"></div>
+  </div>
+  <div id="down_screen">
+    <div id="Airspeed" class="one_third"></div>
+    <div id="Rudder" class="one_third"></div>
+    <div id="Elevator" class="one_third"></div>
+  </div>
+  <!--
+  time:<div id="time" name="show_data" style="display: inline-block"></div><br>
+  pitch:<div id="pitch" name="show_data" style="display: inline-block"></div><br>
+  yaw:<div id="yaw" name="show_data" style="display: inline-block"></div><br>
+  roll:<div id="roll" name="show_data" style="display: inline-block"></div><br>
+  latitude:<div id="latitude" name="show_data" style="display: inline-block"></div><br>
+  longitude:<div id="longitude" name="show_data" style="display: inline-block"></div><br>
+  gpsCnt:<div id="gpsCnt" name="show_data" style="display: inline-block"></div><br>
+  straightDistance:<div id="straightDistance" name="show_data" style="display: inline-block"></div><br>
+  integralDistance:<div id="integralDistance" name="show_data" style="display: inline-block"></div><br>
+  elevator:<div id="elevator" name="show_data" style="display: inline-block"></div><br>
+  rudder:<div id="rudder" name="show_data" style="display: inline-block"></div><br>
+  trim:<div id="trim" name="show_data" style="display: inline-block"></div><br>
+  airspeed:<div id="airspeed" name="show_data" style="display: inline-block"></div><br>
+  cadence:<div id="cadence" name="show_data" style="display: inline-block"></div><br>
+  ultsonic:<div id="ultsonic" name="show_data" style="display: inline-block"></div><br>
+  atompress:<div id="atompress" name="show_data" style="display: inline-block"></div><br>
+  cadencevolt:<div id="cadencevolt" name="show_data" style="display: inline-block"></div><br>
+  selector:<div id="selector" name="show_data" style="display: inline-block"></div><br>
+  ultsonicvolt:<div id="ultsonicvolt" name="show_data" style="display: inline-block"></div><br>
+  sevovolt:<div id="servovolt" name="show_data" style="display: inline-block"></div><br>
+-->
+  <script>
+  function req(){
+    //リアルタイム表示するすべてのタグを取得
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4){
+        if(xhr.status === 200){
+
+          //受け取ったcsv形式のデータを配列化
+          var responseText = xhr.responseText;
+          var results_line = responseText.split('\n');
+          var results = new Array(results_line.length);
+
+          var connection_situation = new Array(results_line.length);
+          var time = new Array(results_line.length);
+          var pitch = new Array(results_line.length);
+          var yaw = new Array(results_line.length);
+          var roll = new Array(results_line.length);
+          var latitude = new Array(results_line.length);
+          var longitude = new Array(results_line.length);
+          var gpsCnt = new Array(results_line.length);
+          var straightDistance = new Array(results_line.length);
+          var integralDistance = new Array(results_line.length);
+          var elevator = new Array(results_line.length);
+          var rudder = new Array(results_line.length);
+          var trim = new Array(results_line.length);
+          var airspeed = new Array(results_line.length);
+          var cadence = new Array(results_line.length);
+          var ultsonic = new Array(results_line.length);
+          var atompress = new Array(results_line.length);
+          var selector = new Array(results_line.length);
+          var cadencevolt = new Array(results_line.length);
+          var ultsonicvolt = new Array(results_line.length);
+          var servovolt = new Array(results_line.length);
+
+          //connection_situation.textContent = "Complete";
+
+          for(let i=0;i<results_line.length;i++){
+            results[i] = results_line[i].split(',');
+          }
+
+          /*
+          //画面上の数値を変更する。
+          time.textContent = results[0];
+          pitch.textContent = results[1];
+          yaw.textContent = results[2];
+          roll.textContent = results[3];
+          latitude.textContent = results[4];
+          longitude.textContent = results[5];
+          gpsCnt.textContent = results[6];
+          straightDistance.textContent = results[7];
+          integralDistance.textContent = results[8];
+          elevator.textContent = results[9];
+          rudder.textContent = results[10];
+          trim.textContent = results[11];
+          airspeed.textContent = results[12];
+          cadence.textContent = results[13];
+          ultsonic.textContent  = results[14];
+          atompress.textContent = results[15];
+          selector.textContent = results[16];
+          cadencevolt.textContent = results[17];
+          ultsonicvolt.textContent = results[18];
+          servovolt.textContent = results[19];
+          */
+          for(let i=0;i<results_line.length;i++){
+            time[i] = results[i][0];
+            pitch[i] = results[i][1];
+            yaw[i]= results[i][2];
+            roll[i] = results[i][3];
+            latitude[i] = results[i][4];
+            longitude[i] = results[i][5];
+            gpsCnt[i] = results[i][6];
+            straightDistance[i] = results[i][7];
+            integralDistance[i] = results[i][8];
+            elevator[i] = results[i][9];
+            rudder[i] = results[i][10];
+            trim[i] = results[i][11];
+            airspeed[i] = results[i][12];
+            //回転数の変な値は0に変更る
+            if(results[i][13]>200 || results[i][13]<0){
+              results[i][13] = 0;
+            }
+            cadence[i] = results[i][13];
+            ultsonic[i]  = results[i][14];
+            atompress[i] = results[i][15];
+            selector[i] = results[i][16];
+            cadencevolt[i] = results[i][17];
+            ultsonicvolt[i] = results[i][18];
+            servovolt[i] = results[i][19];
+          }
+
+          //見やすいグラフにするためにtimeを最小値で引く
+          for(var i=0;i<results_line.length;i++){
+            time[i] = time[i] - time[0];
+          }
+
+          var trace1 = {
+            x:new Array(results_line.length),
+            y:roll,
+            name:'roll',
+            type:'scatter'
+          };
+          var trace2 = {
+            x:new Array(results_line.length),
+            y:yaw,
+            type:'scatter',
+            name:'yaw'
+          };
+          //後でtrace1のxと同じように参照入れる
+          for(let i=0;i<results_line.length;i++){
+            trace1.x[i] = i;
+            trace2.x[i] = i;
+          }
+          var layout = {
+            //title:'Yaw Roll',
+            xaxis:{
+              title:'Time',
+            },
+            yaxis:{
+              title:'roll',
+            }
+          }
+
+          data = [trace1,trace2];
+          Plotly.newPlot('Roll',data,layout);
+
+          data = [trace1];
+          trace1.y = pitch;
+          trace1.name = 'pitch';
+          layout.yaxis.title = 'pitch';
+          Plotly.newPlot('Pitch',data,layout);
+
+          trace1.y = cadence;
+          trace1.name = 'cadence';
+          layout.yaxis.title = 'cadence';
+          Plotly.newPlot('Cadence',data,layout);
+
+          trace1.y = airspeed;
+          trace1.name = 'airspeed';
+          layout.yaxis.title = 'airspeed';
+          Plotly.newPlot('Airspeed',data,layout);
+
+          trace1.y = rudder;
+          trace1.name = 'rudder';
+          layout.yaxis.title = 'rudder';
+          Plotly.newPlot('Rudder',data,layout);
+
+          trace1.y = elevator;
+          trace1.name = 'elevator';
+          layout.yaxis.title = 'elevator';
+          Plotly.newPlot('Elevator',data,layout);
+
+        }
+      }
+    };
+
+    xhr.open('GET','get_recent_data.php' ,true);
+    xhr.send(null);
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    setInterval('req()',250);
+  },false);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  time:<div id="time" name="show_data" style="display: inline-block"></div><br>
+  pitch:<div id="pitch" name="show_data" style="display: inline-block"></div><br>
+  yaw:<div id="yaw" name="show_data" style="display: inline-block"></div><br>
+  roll:<div id="roll" name="show_data" style="display: inline-block"></div><br>
+  latitude:<div id="latitude" name="show_data" style="display: inline-block"></div><br>
+  longitude:<div id="longitude" name="show_data" style="display: inline-block"></div><br>
+  gpsCnt:<div id="gpsCnt" name="show_data" style="display: inline-block"></div><br>
+  straightDistance:<div id="straightDistance" name="show_data" style="display: inline-block"></div><br>
+  integralDistance:<div id="integralDistance" name="show_data" style="display: inline-block"></div><br>
+  elevator:<div id="elevator" name="show_data" style="display: inline-block"></div><br>
+  rudder:<div id="rudder" name="show_data" style="display: inline-block"></div><br>
+  trim:<div id="trim" name="show_data" style="display: inline-block"></div><br>
+  airspeed:<div id="airspeed" name="show_data" style="display: inline-block"></div><br>
+  cadence:<div id="cadence" name="show_data" style="display: inline-block"></div><br>
+  ultsonic:<div id="ultsonic" name="show_data" style="display: inline-block"></div><br>
+  atompress:<div id="atompress" name="show_data" style="display: inline-block"></div><br>
+  cadencevolt:<div id="cadencevolt" name="show_data" style="display: inline-block"></div><br>
+  selector:<div id="selector" name="show_data" style="display: inline-block"></div><br>
+  ultsonicvolt:<div id="ultsonicvolt" name="show_data" style="display: inline-block"></div><br>
+  sevovolt:<div id="servovolt" name="show_data" style="display: inline-block"></div><br>
+  <div id="connection_situation"></div><br>
+
+  <script type="text/javascript">
+  var connection_situation = document.getElementById('connection_situation');
+  var time = document.getElementById('time');
+  var pitch = document.getElementById('pitch');
+  var yaw = document.getElementById('yaw');
+  var roll = document.getElementById('roll');
+  var latitude = document.getElementById('latitude');
+  var longitude = document.getElementById('longitude');
+  var gpsCnt = document.getElementById('gpsCnt');
+  var straightDistance = document.getElementById('straightDistance');
+  var integralDistance = document.getElementById('integralDistance');
+  var elevator = document.getElementById('elevator');
+  var rudder = document.getElementById('rudder');
+  var trim = document.getElementById('trim');
+  var airspeed = document.getElementById('airspeed');
+  var cadence = document.getElementById('cadence');
+  var ultsonic = document.getElementById('ultsonic');
+  var atompress = document.getElementById('atompress');
+  var selector = document.getElementById('selector');
+  var cadencevolt = document.getElementById('cadencevolt');
+  var ultsonicvolt = document.getElementById('ultsonicvolt');
+  var servovolt = document.getElementById('servovolt');
+
+  function req(){
+    //リアルタイム表示するすべてのタグを取得
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4){
+        if(xhr.status === 200){
+          connection_situation.textContent = "Complete";
+
+          //受け取ったcsv形式のデータを配列化
+          var responseText = xhr.responseText;
+          var results = responseText.split(',');
+
+          //画面上の数値を変更する。
+          time.textContent = results[0];
+          pitch.textContent = results[1];
+          yaw.textContent = results[2];
+          roll.textContent = results[3];
+          latitude.textContent = results[4];
+          longitude.textContent = results[5];
+          gpsCnt.textContent = results[6];
+          straightDistance.textContent = results[7];
+          integralDistance.textContent = results[8];
+          elevator.textContent = results[9];
+          rudder.textContent = results[10];
+          trim.textContent = results[11];
+          airspeed.textContent = results[12];
+          cadence.textContent = results[13];
+          ultsonic.textContent  = results[14];
+          atompress.textContent = results[15];
+          selector.textContent = results[16];
+          cadencevolt.textContent = results[17];
+          ultsonicvolt.textContent = results[18];
+          servovolt.textContent = results[19];
+
+        }else{
+          connection_situation.textContent = "サーバーエラーが発生しました";
+        }
+      }else{
+        connection_situation.textContent = "connecting...";
+      }
+    };
+
+    xhr.open('GET','getter.php',true);
+    xhr.send(null);
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    setInterval('req()',250);
+  },false);
+
+  </script>
+</body>
+
+</html>
