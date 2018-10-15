@@ -6,5 +6,7 @@ Androidから送られてきたデータをサーバに保存し、
 グラフ表示するウェブサイトを作成した。
 
 ## ファイル構成
-```sh controller.php
+```sh
+controller.php
 ```
+ここにandroidからcsv形式でデータを送る。
