@@ -6,6 +6,6 @@ Androidから送られてきたデータをサーバに保存し、
 グラフ表示するウェブサイトを作成した。
 
 ```sh
-controller.php
-```
+controller.php```
+
 ## ファイル構成
